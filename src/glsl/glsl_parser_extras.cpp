@@ -48,6 +48,7 @@ glsl_compute_version_string(void *mem_ctx, bool is_es, unsigned version)
                           version / 100, version % 100);
 }
 
+static const message_format msg_format = EDN; // HUMAN_READABLE;
 
 static unsigned known_desktop_glsl_versions[] =
    { 110, 120, 130, 140, 150, 330, 400, 410, 420, 430, 440 };
@@ -385,12 +386,16 @@ _mesa_glsl_msg(const YYLTYPE *locp, _mesa_glsl_parse_state *state,
 
    /* Get the offset that the new message will be written to. */
    int msg_offset = strlen(state->info_log);
+    
+   const char* edn_message_start = "{:source %u, :line %u, :col %u, :type \"%s\", :message \"";
+   const char* human_message_start = "%u:%u(%u): %s: ";
 
-   ralloc_asprintf_append(&state->info_log, "%u:%u(%u): %s: ",
-					    locp->source,
-					    locp->first_line,
-					    locp->first_column,
-					    error ? "error" : "warning");
+   ralloc_asprintf_append(&state->info_log,
+                          msg_format == EDN ? edn_message_start : human_message_start,
+                          locp->source,
+                          locp->first_line,
+                          locp->first_column,
+                          error ? "error" : "warning");
    ralloc_vasprintf_append(&state->info_log, fmt, ap);
 
    const char *const msg = &state->info_log[msg_offset];
@@ -398,8 +403,12 @@ _mesa_glsl_msg(const YYLTYPE *locp, _mesa_glsl_parse_state *state,
 
    /* Report the error via GL_ARB_debug_output. */
    _mesa_shader_debug(ctx, type, &msg_id, msg, strlen(msg));
+    
+    const char* edn_message_end = "\"}\n";
+    const char* human_message_end = "\n";
 
-   ralloc_strcat(&state->info_log, "\n");
+   ralloc_strcat(&state->info_log,
+                 msg_format == EDN ? edn_message_end : human_message_end);
 }
 
 void

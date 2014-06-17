@@ -64,7 +64,7 @@ static void
 remove_per_vertex_blocks(exec_list *instructions,
                          _mesa_glsl_parse_state *state, ir_variable_mode mode);
 
-
+//@ethanis: this shows how to traverse the ast...
 void
 _mesa_ast_to_hir(exec_list *instructions, struct _mesa_glsl_parse_state *state)
 {
@@ -94,6 +94,12 @@ _mesa_ast_to_hir(exec_list *instructions, struct _mesa_glsl_parse_state *state)
     */
    state->symbols->push_scope();
 
+    // @ethanis: this is how we traverse the ast. each node has a print method.
+    // addition
+   foreach_list_typed (ast_node, ast, link, & state->translation_unit)
+      ast->print();
+    // end addition
+    
    foreach_list_typed (ast_node, ast, link, & state->translation_unit)
       ast->hir(instructions, state);
 

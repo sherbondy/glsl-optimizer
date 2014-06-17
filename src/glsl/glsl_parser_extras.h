@@ -63,6 +63,12 @@ typedef struct YYLTYPE {
 # define YYLTYPE_IS_DECLARED 1
 # define YYLTYPE_IS_TRIVIAL 1
 
+//@ethanis: spit out edn-formatted messages instead of just plaintext
+typedef enum {
+    HUMAN_READABLE,
+    EDN
+} message_format;
+
 extern void _mesa_glsl_error(YYLTYPE *locp, _mesa_glsl_parse_state *state,
 			     const char *fmt, ...);
 

@@ -409,6 +409,8 @@ glslopt_shader* glslopt_optimize (glslopt_ctx* ctx, glslopt_shader_type type, co
 	_mesa_glsl_lexer_ctor (state, shaderSource);
 	_mesa_glsl_parse (state);
 	_mesa_glsl_lexer_dtor (state);
+    
+    // @ethanis: I should be able to print out the state here!
 
 	exec_list* ir = new (shader) exec_list();
 	shader->shader->ir = ir;
