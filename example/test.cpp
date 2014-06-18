@@ -46,8 +46,8 @@ int main(int argc, const char** argv)
    glslopt_target target = kGlslTargetOpenGLES20;
    glslopt_ctx* ctx = glslopt_initialize(target);
 
-   const char* shaderPath = "test.vs";
-   glslopt_shader_type shaderType = kGlslOptShaderVertex;
+   const char* shaderPath = "shaders/test.frag";
+   glslopt_shader_type shaderType = kGlslOptShaderFragment;
    glslopt_options options;
 
    std::string shaderSource;
@@ -61,7 +61,8 @@ int main(int argc, const char** argv)
    glslopt_shader* shader = glslopt_optimize (ctx, shaderType, shaderSource.c_str(), options);
    if (glslopt_get_status (shader)) {
      const char* newSource = glslopt_get_output (shader);
-     printf("%s", newSource);
+     printf("Compiled without a hitch\n");
+     //printf("%s", newSource);
    } else {
      const char* errorLog = glslopt_get_log (shader);
      printf("%s", errorLog);
